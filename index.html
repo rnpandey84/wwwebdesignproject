@@ -1,0 +1,1444 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Creative Web Lab</title>
+  <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&family=Fira+Code:wght@400;500&display=swap" rel="stylesheet">
+  <style>
+    :root {
+      --primary: #FF7EB9; /* Soft pink */
+      --primary-light: #FFA7C9;
+      --primary-dark: #D65A8A;
+      --secondary: #FF65A3; /* Brighter pink */
+      --accent: #7AFCFF; /* Soft teal for contrast */
+      --light: #FFF5F7; /* Baby pink background */
+      --dark: #3A2E3A; /* Dark purple for text */
+      --gray: #A68A8E; /* Muted pink-gray */
+      --card-bg: #FFFFFF; /* White cards */
+      --text: #3A2E3A; /* Dark text */
+      --text-light: #8E7E82; /* Lighter text */
+      --shadow-sm: 0 2px 4px rgba(0,0,0,0.05);
+      --shadow-md: 0 4px 12px rgba(0,0,0,0.1);
+      --shadow-lg: 0 8px 24px rgba(0,0,0,0.15);
+      --radius-sm: 6px;
+      --radius-md: 12px;
+      --radius-lg: 16px;
+      --transition: all 0.3s cubic-bezier(0.25,0.8,0.25,1);
+    }
+
+    .dark-mode {
+      --primary: #FF95C2;
+      --primary-light: #FFB7D5;
+      --primary-dark: #FF7EB9;
+      --secondary: #FF78AE;
+      --accent: #88FFF7;
+      --light: #2A1E2A; /* Dark purple background */
+      --dark: #FFEFF4; /* Light pink text */
+      --gray: #8E7E82;
+      --card-bg: #3A2E3A; /* Dark purple cards */
+      --text: #FFEFF4;
+      --text-light: #D9C2C7;
+      --shadow-sm: 0 2px 4px rgba(0,0,0,0.3);
+      --shadow-md: 0 4px 12px rgba(0,0,0,0.25);
+      --shadow-lg: 0 8px 24px rgba(0,0,0,0.2);
+    }
+
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+    }
+
+    body {
+      font-family: 'Poppins', sans-serif;
+      background-color: var(--light);
+      color: var(--text);
+      line-height: 1.6;
+      min-height: 100vh;
+      background-image: 
+        radial-gradient(circle at 10% 20%, rgba(255, 126, 185, 0.1) 0%, transparent 20%),
+        radial-gradient(circle at 90% 80%, rgba(122, 252, 255, 0.1) 0%, transparent 20%);
+    }
+
+    .header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      padding: 1.5rem 2rem;
+      background-color: var(--card-bg);
+      box-shadow: var(--shadow-sm);
+      position: sticky;
+      top: 0;
+      z-index: 100;
+    }
+
+    .logo {
+      display: flex;
+      align-items: center;
+      gap: 1rem;
+    }
+
+    .logo img {
+      height: 40px;
+      width: 40px;
+      object-fit: contain;
+    }
+
+    .logo-text h1 {
+      font-size: 1.5rem;
+      font-weight: 700;
+      color: var(--primary);
+      letter-spacing: -0.5px;
+    }
+
+    .logo-text p {
+      font-size: 0.875rem;
+      color: var(--text-light);
+      font-family: 'Fira Code', monospace;
+    }
+
+    .theme-toggle {
+      background: transparent;
+      color: var(--primary);
+      border: none;
+      width: 42px;
+      height: 42px;
+      border-radius: 50%;
+      display: grid;
+      place-items: center;
+      cursor: pointer;
+      transition: var(--transition);
+      font-size: 1.25rem;
+      border: 2px solid var(--primary);
+    }
+
+    .theme-toggle:hover {
+      background: var(--primary);
+      color: white;
+      transform: rotate(15deg);
+    }
+
+    .main-container {
+      display: grid;
+      grid-template-columns: 280px 1fr;
+      min-height: calc(100vh - 80px);
+    }
+
+    .sidebar {
+      background-color: var(--card-bg);
+      padding: 2rem 1.5rem;
+      border-right: 1px solid rgba(255, 126, 185, 0.1);
+      box-shadow: var(--shadow-sm);
+    }
+
+    .dark-mode .sidebar {
+      border-right: 1px solid rgba(255, 126, 185, 0.1);
+    }
+
+    .sidebar-title {
+      font-size: 0.9rem;
+      text-transform: uppercase;
+      letter-spacing: 1px;
+      color: var(--text-light);
+      margin-bottom: 1.5rem;
+      display: flex;
+      align-items: center;
+      gap: 0.5rem;
+    }
+
+    .sidebar-title::after {
+      content: '';
+      flex: 1;
+      height: 1px;
+      background-color: var(--text-light);
+      opacity: 0.3;
+    }
+
+    .nav-item {
+      display: flex;
+      align-items: center;
+      gap: 0.75rem;
+      padding: 0.75rem 1rem;
+      margin-bottom: 0.5rem;
+      border-radius: var(--radius-sm);
+      cursor: pointer;
+      transition: var(--transition);
+      color: var(--text-light);
+      text-decoration: none;
+    }
+
+    .nav-item:hover, .nav-item.active {
+      background-color: var(--primary);
+      color: white;
+      box-shadow: var(--shadow-sm);
+    }
+
+    .nav-item.active {
+      font-weight: 500;
+    }
+
+    .content-area {
+      padding: 2rem;
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+      gap: 1.5rem;
+      align-content: start;
+    }
+
+    .section-title {
+      grid-column: 1 / -1;
+      margin-bottom: -0.5rem;
+      color: var(--primary);
+      font-size: 1.25rem;
+      font-weight: 600;
+    }
+
+    .card {
+      background: var(--card-bg);
+      border-radius: var(--radius-lg);
+      padding: 1.5rem;
+      box-shadow: var(--shadow-sm);
+      transition: var(--transition);
+      display: flex;
+      flex-direction: column;
+      min-height: 280px;
+      border: 1px solid rgba(255, 126, 185, 0.1);
+    }
+
+    .dark-mode .card {
+      border: 1px solid rgba(255, 126, 185, 0.1);
+    }
+
+    .card:hover {
+      transform: translateY(-5px);
+      box-shadow: var(--shadow-md);
+    }
+
+    .card-header {
+      display: flex;
+      align-items: center;
+      gap: 0.75rem;
+      margin-bottom: 1.25rem;
+      padding-bottom: 0.75rem;
+      border-bottom: 1px solid rgba(255, 126, 185, 0.1);
+    }
+
+    .card-header h2 {
+      font-size: 1.1rem;
+      font-weight: 600;
+      color: var(--primary);
+    }
+
+    .card-header .icon {
+      font-size: 1.5rem;
+      color: var(--secondary);
+    }
+
+    .card-content {
+      flex: 1;
+      display: flex;
+      flex-direction: column;
+    }
+
+    input, select, textarea, button {
+      font-family: 'Poppins', sans-serif;
+      border-radius: var(--radius-sm);
+      transition: var(--transition);
+    }
+
+    input, select, textarea {
+      width: 100%;
+      padding: 0.75rem 1rem;
+      margin-bottom: 1rem;
+      border: 1px solid rgba(255, 126, 185, 0.2);
+      background: var(--card-bg);
+      color: var(--text);
+      font-size: 0.9rem;
+    }
+
+    .dark-mode input, 
+    .dark-mode select, 
+    .dark-mode textarea {
+      border: 1px solid rgba(255, 126, 185, 0.2);
+    }
+
+    input:focus, select:focus, textarea:focus {
+      outline: none;
+      border-color: var(--primary);
+      box-shadow: 0 0 0 3px rgba(255, 126, 185, 0.2);
+    }
+
+    button:not(.theme-toggle) {
+      background: var(--primary);
+      color: white;
+      border: none;
+      padding: 0.75rem 1.5rem;
+      font-weight: 500;
+      cursor: pointer;
+      font-size: 0.875rem;
+      margin-bottom: 1rem;
+    }
+
+    button:not(.theme-toggle):hover {
+      background: var(--primary-dark);
+      transform: translateY(-2px);
+    }
+
+    .output {
+      background: rgba(255, 126, 185, 0.08);
+      padding: 1rem;
+      border-radius: var(--radius-sm);
+      margin-top: auto;
+      font-family: 'Fira Code', monospace;
+      font-size: 0.85rem;
+      overflow: auto;
+      max-height: 150px;
+      color: var(--text);
+    }
+
+    .dark-mode .output {
+      background: rgba(255, 126, 185, 0.15);
+    }
+
+    /* Custom scrollbar */
+    ::-webkit-scrollbar {
+      width: 6px;
+      height: 6px;
+    }
+
+    ::-webkit-scrollbar-track {
+      background: var(--light);
+      border-radius: 10px;
+    }
+
+    ::-webkit-scrollbar-thumb {
+      background: var(--primary);
+      border-radius: 10px;
+    }
+
+    ::-webkit-scrollbar-thumb:hover {
+      background: var(--secondary);
+    }
+
+    /* Specific card styles */
+    .color-preview {
+      width: 100%;
+      height: 80px;
+      border-radius: var(--radius-sm);
+      margin: 1rem 0;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-weight: bold;
+      font-family: 'Fira Code', monospace;
+      font-size: 0.9rem;
+      transition: var(--transition);
+    }
+
+    .slider-container {
+      margin: 1rem 0;
+    }
+
+    .slider-container label {
+      display: block;
+      margin-bottom: 0.5rem;
+      font-size: 0.9rem;
+      color: var(--text-light);
+    }
+
+    .slider {
+      width: 100%;
+      -webkit-appearance: none;
+      height: 6px;
+      border-radius: 3px;
+      background: var(--light);
+      outline: none;
+    }
+
+    .slider::-webkit-slider-thumb {
+      -webkit-appearance: none;
+      appearance: none;
+      width: 18px;
+      height: 18px;
+      border-radius: 50%;
+      background: var(--primary);
+      cursor: pointer;
+      transition: var(--transition);
+      border: 2px solid white;
+      box-shadow: var(--shadow-sm);
+    }
+
+    .slider::-webkit-slider-thumb:hover {
+      background: var(--secondary);
+      transform: scale(1.1);
+    }
+
+    .emoji-display {
+      font-size: 3rem;
+      text-align: center;
+      margin: 1rem 0;
+      transition: var(--transition);
+    }
+
+    .task-list {
+      list-style: none;
+      margin-top: 1rem;
+      max-height: 200px;
+      overflow-y: auto;
+    }
+
+    .task-item {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      padding: 0.75rem;
+      margin-bottom: 0.5rem;
+      background: rgba(255, 126, 185, 0.08);
+      border-radius: var(--radius-sm);
+      transition: var(--transition);
+    }
+
+    .dark-mode .task-item {
+      background: rgba(255, 126, 185, 0.15);
+    }
+
+    .task-item:hover {
+      transform: translateX(3px);
+    }
+
+    .task-completed {
+      text-decoration: line-through;
+      opacity: 0.7;
+    }
+
+    .task-delete {
+      color: var(--secondary);
+      background: none;
+      border: none;
+      cursor: pointer;
+      font-size: 1rem;
+      padding: 0.25rem;
+    }
+
+    .quote-text {
+      font-style: italic;
+      font-size: 1rem;
+      margin: 1rem 0;
+      line-height: 1.6;
+    }
+
+    .quote-author {
+      text-align: right;
+      font-weight: 500;
+      color: var(--primary);
+      margin-bottom: 1rem;
+      font-size: 0.9rem;
+    }
+
+    .button-group {
+      display: flex;
+      gap: 0.75rem;
+      margin-top: auto;
+    }
+
+    .button-group button {
+      flex: 1;
+    }
+
+    .mood-selector {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 0.75rem;
+      margin: 1rem 0;
+    }
+
+    .mood-option {
+      background: var(--light);
+      border: 2px solid transparent;
+      border-radius: var(--radius-sm);
+      padding: 0.75rem;
+      text-align: center;
+      cursor: pointer;
+      transition: var(--transition);
+      font-size: 1.5rem;
+    }
+
+    .dark-mode .mood-option {
+      background: rgba(0,0,0,0.2);
+    }
+
+    .mood-option:hover, .mood-option.selected {
+      border-color: var(--primary);
+      transform: translateY(-3px);
+    }
+
+    .mood-option.selected {
+      background: var(--primary);
+      color: white;
+    }
+
+    .progress-container {
+      width: 100%;
+      background: var(--light);
+      border-radius: var(--radius-sm);
+      margin: 1rem 0;
+      height: 6px;
+      overflow: hidden;
+    }
+
+    .dark-mode .progress-container {
+      background: rgba(0,0,0,0.2);
+    }
+
+    .progress-bar {
+      height: 100%;
+      background: linear-gradient(90deg, var(--primary), var(--secondary));
+      width: 0%;
+      transition: width 0.5s ease;
+    }
+
+    /* New styles for added components */
+    .journal-entry {
+      width: 100%;
+      height: 120px;
+      padding: 15px;
+      font-size: 16px;
+      border-radius: 6px;
+      border: 1px solid rgba(255, 126, 185, 0.2);
+      resize: none;
+      margin-bottom: 1rem;
+    }
+
+    .entry {
+      background: rgba(255, 126, 185, 0.08);
+      margin-top: 15px;
+      padding: 15px;
+      border-left: 4px solid var(--primary);
+      border-radius: 6px;
+    }
+
+    .entry time {
+      color: var(--text-light);
+      font-size: 0.9rem;
+    }
+
+    .counter-display {
+      font-size: 3rem;
+      font-weight: bold;
+      margin: 1rem 0;
+      text-align: center;
+      color: var(--primary);
+    }
+
+    .counter-btn {
+      padding: 5px 10px;
+      font-size: 18px;
+      margin: 5px;
+      cursor: pointer;
+      border: none;
+      border-radius: 5px;
+    }
+
+    .increase-btn {
+      background-color: var(--accent);
+      color: var(--dark);
+    }
+
+    .decrease-btn {
+      background-color: var(--secondary);
+      color: white;
+    }
+
+    .reset-btn {
+      background-color: var(--gray);
+      color: white;
+    }
+
+    .dom-box {
+      width: 100%;
+      height: 100px;
+      background-color: rgba(255, 126, 185, 0.2);
+      margin: 1rem 0;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 18px;
+      font-weight: bold;
+      border-radius: var(--radius-sm);
+    }
+
+    .delete-btn {
+      background-color: var(--secondary);
+      color: white;
+      border: none;
+      padding: 5px 8px;
+      cursor: pointer;
+      border-radius: 3px;
+      font-size: 0.8rem;
+    }
+
+    /* Responsive adjustments */
+    @media (max-width: 1024px) {
+      .main-container {
+        grid-template-columns: 1fr;
+      }
+      
+      .sidebar {
+        display: none;
+      }
+    }
+
+    @media (max-width: 768px) {
+      .content-area {
+        grid-template-columns: 1fr;
+        padding: 1rem;
+      }
+      
+      .header {
+        padding: 1rem;
+      }
+      
+      .logo-text h1 {
+        font-size: 1.25rem;
+      }
+    }
+
+    /* Animation classes */
+    @keyframes float {
+      0%, 100% { transform: translateY(0); }
+      50% { transform: translateY(-10px); }
+    }
+
+    .float {
+      animation: float 3s ease-in-out infinite;
+    }
+
+    @keyframes pulse {
+      0% { transform: scale(1); }
+      50% { transform: scale(1.05); }
+      100% { transform: scale(1); }
+    }
+
+    .pulse {
+      animation: pulse 2s infinite;
+    }
+  </style>
+</head>
+<body>
+  <!-- Header -->
+  <header class="header">
+    <div class="logo">
+      <img src="sau-mini.jpg" alt="Lab Logo" onerror="this.src='https://via.placeholder.com/50?text=LAB'">
+      <div class="logo-text">
+        <h1>The Lazy Loader’s Club</h1>
+        <p>Created by Raj Nath Pandey</p>
+      </div>
+    </div>
+    <button class="theme-toggle" onclick="toggleTheme()">🌓</button>
+  </header>
+
+  <!-- Main Content -->
+  <div class="main-container">
+    <!-- Sidebar Navigation -->
+    <aside class="sidebar">
+      <div class="sidebar-title">
+        <span>Navigation</span>
+      </div>
+      <a href="#calculator" class="nav-item active">
+        <span>🧮</span>
+        <span>Calculator</span>
+      </a>
+      <a href="#mood" class="nav-item">
+        <span>😊</span>
+        <span>Mood Tracker</span>
+      </a>
+      <a href="#color" class="nav-item">
+        <span>🎨</span>
+        <span>Color Lab</span>
+      </a>
+      <a href="#progress" class="nav-item">
+        <span>📊</span>
+        <span>Progress</span>
+      </a>
+      <a href="#tasks" class="nav-item">
+        <span>✅</span>
+        <span>Task Master</span>
+      </a>
+      <a href="#quotes" class="nav-item">
+        <span>💬</span>
+        <span>Quotes</span>
+      </a>
+      <a href="#converter" class="nav-item">
+        <span>📏</span>
+        <span>Unit Converter</span>
+      </a>
+      <a href="#password" class="nav-item">
+        <span>🔒</span>
+        <span>Password Vault</span>
+      </a>
+      <a href="#journal" class="nav-item">
+        <span>📓</span>
+        <span>Daily Journal</span>
+      </a>
+      <a href="#notes" class="nav-item">
+        <span>📝</span>
+        <span>Notes App</span>
+      </a>
+      <a href="#dom" class="nav-item">
+        <span>🖱️</span>
+        <span>DOM Playground</span>
+      </a>
+      <a href="#counter" class="nav-item">
+        <span>🔢</span>
+        <span>Counter</span>
+      </a>
+    </aside>
+
+    <!-- Content Area -->
+    <main class="content-area">
+      <h2 class="section-title">Interactive Tools</h2>
+
+      <!-- Scientific Calculator -->
+      <div class="card" id="calculator">
+        <div class="card-header">
+          <span class="icon">🧮</span>
+          <h2>Scientific Calculator</h2>
+        </div>
+        <div class="card-content">
+          <input type="number" id="sciNum1" placeholder="First number">
+          <input type="number" id="sciNum2" placeholder="Second number (optional)">
+          <select id="sciOperation">
+            <option value="add">Addition (+)</option>
+            <option value="subtract">Subtraction (-)</option>
+            <option value="multiply">Multiplication (×)</option>
+            <option value="divide">Division (÷)</option>
+            <option value="power">Power (x^y)</option>
+            <option value="sqrt">Square Root (√x)</option>
+            <option value="log">Logarithm (log)</option>
+            <option value="sin">Sine (sin)</option>
+            <option value="cos">Cosine (cos)</option>
+            <option value="tan">Tangent (tan)</option>
+          </select>
+          <button onclick="scientificCalculate()">Calculate</button>
+          <div class="output" id="sciOutput"></div>
+        </div>
+      </div>
+
+      <!-- Mood Tracker -->
+      <div class="card" id="mood">
+        <div class="card-header">
+          <span class="icon">😊</span>
+          <h2>Mood Tracker</h2>
+        </div>
+        <div class="card-content">
+          <p>How are you feeling today?</p>
+          <div class="mood-selector">
+            <div class="mood-option" onclick="selectMood(this, '😊')">😊</div>
+            <div class="mood-option" onclick="selectMood(this, '😄')">😄</div>
+            <div class="mood-option" onclick="selectMood(this, '😐')">😐</div>
+            <div class="mood-option" onclick="selectMood(this, '😕')">😕</div>
+            <div class="mood-option" onclick="selectMood(this, '😢')">😢</div>
+            <div class="mood-option" onclick="selectMood(this, '😡')">😡</div>
+          </div>
+          <textarea id="moodNote" placeholder="Add a note about your mood..."></textarea>
+          <button onclick="saveMood()">Save Mood</button>
+          <div class="output" id="moodHistory"></div>
+        </div>
+      </div>
+
+      <!-- RGB Color Lab -->
+      <div class="card" id="color">
+        <div class="card-header">
+          <span class="icon">🎨</span>
+          <h2>RGB Color Lab</h2>
+        </div>
+        <div class="card-content">
+          <div class="slider-container">
+            <label>Red: <span id="rValue">128</span></label>
+            <input type="range" min="0" max="255" value="128" id="rSlider" class="slider" oninput="updateColorLab()">
+          </div>
+          
+          <div class="slider-container">
+            <label>Green: <span id="gValue">128</span></label>
+            <input type="range" min="0" max="255" value="128" id="gSlider" class="slider" oninput="updateColorLab()">
+          </div>
+          
+          <div class="slider-container">
+            <label>Blue: <span id="bValue">128</span></label>
+            <input type="range" min="0" max="255" value="128" id="bSlider" class="slider" oninput="updateColorLab()">
+          </div>
+          
+          <div id="colorPreview" class="color-preview">RGB(128, 128, 128)</div>
+          
+          <div class="button-group">
+            <button onclick="randomColor()">Random</button>
+            <button onclick="copyColor()">Copy HEX</button>
+          </div>
+        </div>
+      </div>
+
+      <!-- Emoji Progress -->
+      <div class="card" id="progress">
+        <div class="card-header">
+          <span class="icon">📊</span>
+          <h2>Emoji Progress</h2>
+        </div>
+        <div class="card-content">
+          <p>Set your progress level:</p>
+          <input type="range" min="0" max="100" value="50" id="emojiProgress" class="slider" oninput="updateEmojiProgress()">
+          <div class="emoji-display" id="progressEmoji">😐</div>
+          <div class="progress-container">
+            <div class="progress-bar" id="progressBar"></div>
+          </div>
+          <div class="output" id="progressOutput">Progress: 50% - You're halfway there!</div>
+        </div>
+      </div>
+
+      <!-- Task Master -->
+      <div class="card" id="tasks">
+        <div class="card-header">
+          <span class="icon">✅</span>
+          <h2>Task Master</h2>
+        </div>
+        <div class="card-content">
+          <input type="text" id="newTask" placeholder="Enter a new task...">
+          <div class="button-group">
+            <button onclick="addNewTask()">Add Task</button>
+            <button onclick="clearCompletedTasks()">Clear Completed</button>
+          </div>
+          <ul class="task-list" id="taskList"></ul>
+        </div>
+      </div>
+
+      <!-- Quote Generator -->
+      <div class="card" id="quotes">
+        <div class="card-header">
+          <span class="icon">💬</span>
+          <h2>Quote Generator</h2>
+        </div>
+        <div class="card-content">
+          <div class="quote-text" id="currentQuote">"The only way to do great work is to love what you do."</div>
+          <div class="quote-author" id="quoteAuthor">- Steve Jobs</div>
+          <div class="button-group">
+            <button onclick="newQuote()">New Quote</button>
+            <button onclick="saveQuote()">Save Quote</button>
+          </div>
+          <div class="output" id="savedQuotes"></div>
+        </div>
+      </div>
+
+      <!-- Unit Converter -->
+      <div class="card" id="converter">
+        <div class="card-header">
+          <span class="icon">📏</span>
+          <h2>Unit Converter</h2>
+        </div>
+        <div class="card-content">
+          <input type="number" id="convertValue" placeholder="Enter value">
+          <select id="convertFrom">
+            <option value="meter">Meters</option>
+            <option value="kilometer">Kilometers</option>
+            <option value="centimeter">Centimeters</option>
+            <option value="mile">Miles</option>
+            <option value="foot">Feet</option>
+            <option value="inch">Inches</option>
+            <option value="celsius">Celsius</option>
+            <option value="fahrenheit">Fahrenheit</option>
+            <option value="kilogram">Kilograms</option>
+            <option value="pound">Pounds</option>
+          </select>
+          <select id="convertTo">
+            <option value="foot">Feet</option>
+            <option value="meter">Meters</option>
+            <option value="kilometer">Kilometers</option>
+            <option value="centimeter">Centimeters</option>
+            <option value="mile">Miles</option>
+            <option value="inch">Inches</option>
+            <option value="fahrenheit">Fahrenheit</option>
+            <option value="celsius">Celsius</option>
+            <option value="pound">Pounds</option>
+            <option value="kilogram">Kilograms</option>
+          </select>
+          <button onclick="convertUnits()">Convert</button>
+          <div class="output" id="conversionResult"></div>
+        </div>
+      </div>
+
+      <!-- Password Vault -->
+      <div class="card" id="password">
+        <div class="card-header">
+          <span class="icon">🔒</span>
+          <h2>Password Vault</h2>
+        </div>
+        <div class="card-content">
+          <input type="password" id="vaultPassword" placeholder="Enter password">
+          <div class="button-group">
+            <button onclick="togglePasswordVisibility()">👁️ Show</button>
+            <button onclick="checkPasswordStrength()">Check Strength</button>
+          </div>
+          <div class="output" id="passwordStrength"></div>
+        </div>
+      </div>
+
+      <!-- Daily Journal -->
+      <div class="card" id="journal">
+        <div class="card-header">
+          <span class="icon">📓</span>
+          <h2>Daily Journal</h2>
+        </div>
+        <div class="card-content">
+          <textarea class="journal-entry" id="journalEntry" placeholder="Write something about your day..."></textarea>
+          <button onclick="saveJournalEntry()">Save Entry</button>
+          <div class="output" id="journalEntries"></div>
+        </div>
+      </div>
+
+      <!-- Notes App -->
+      <div class="card" id="notes">
+        <div class="card-header">
+          <span class="icon">📝</span>
+          <h2>Notes App</h2>
+        </div>
+        <div class="card-content">
+          <textarea id="noteInput" placeholder="Write your note here..."></textarea>
+          <div class="button-group">
+            <button onclick="saveNote()">Save Note</button>
+            <button onclick="clearNote()">Clear Note</button>
+          </div>
+          <div class="output" id="displayNote"></div>
+        </div>
+      </div>
+
+      <!-- DOM Playground -->
+      <div class="card" id="dom">
+        <div class="card-header">
+          <span class="icon">🖱️</span>
+          <h2>DOM Playground</h2>
+        </div>
+        <div class="card-content">
+          <h3>Change Background Color</h3>
+          <div class="dom-box" id="colorBox">Click the button</div>
+          <button onclick="changeColor()">Change Color</button>
+
+          <h3 style="margin-top: 1.5rem;">Add List Item</h3>
+          <input type="text" id="itemInput" placeholder="Enter a task">
+          <button onclick="addDomItem()">Add Task</button>
+          <ul id="domTaskList"></ul>
+        </div>
+      </div>
+
+      <!-- Counter App -->
+      <div class="card" id="counter">
+        <div class="card-header">
+          <span class="icon">🔢</span>
+          <h2>Counter</h2>
+        </div>
+        <div class="card-content">
+          <div class="counter-display" id="counterDisplay">0</div>
+          <div style="display: flex; justify-content: center; gap: 0.20rem;">
+            <button class="counter-btn increase-btn" onclick="increaseCounter()">Increase</button>
+            <button class="counter-btn decrease-btn" onclick="decreaseCounter()">Decrease</button>
+            <button class="counter-btn reset-btn" onclick="resetCounter()">Reset</button>
+          </div>
+        </div>
+      </div>
+    </main>
+  </div>
+
+  <script>
+    // Theme toggle
+    function toggleTheme() {
+      document.body.classList.toggle('dark-mode');
+      const themeBtn = document.querySelector('.theme-toggle');
+      if (document.body.classList.contains('dark-mode')) {
+        themeBtn.textContent = '☀️';
+        themeBtn.style.borderColor = 'var(--accent)';
+        themeBtn.style.color = 'var(--accent)';
+      } else {
+        themeBtn.textContent = '🌓';
+        themeBtn.style.borderColor = 'var(--primary)';
+        themeBtn.style.color = 'var(--primary)';
+      }
+    }
+
+    // Navigation
+    document.querySelectorAll('.nav-item').forEach(item => {
+      item.addEventListener('click', function() {
+        document.querySelectorAll('.nav-item').forEach(nav => nav.classList.remove('active'));
+        this.classList.add('active');
+      });
+    });
+
+    // Scientific Calculator
+    function scientificCalculate() {
+      const num1 = parseFloat(document.getElementById('sciNum1').value);
+      const num2 = parseFloat(document.getElementById('sciNum2').value) || 0;
+      const operation = document.getElementById('sciOperation').value;
+      const output = document.getElementById('sciOutput');
+      
+      if (isNaN(num1) && operation !== 'random') {
+        output.textContent = 'Please enter a valid number';
+        return;
+      }
+      
+      let result;
+      switch(operation) {
+        case 'add':
+          result = `${num1} + ${num2} = ${(num1 + num2).toFixed(4)}`;
+          break;
+        case 'subtract':
+          result = `${num1} - ${num2} = ${(num1 - num2).toFixed(4)}`;
+          break;
+        case 'multiply':
+          result = `${num1} × ${num2} = ${(num1 * num2).toFixed(4)}`;
+          break;
+        case 'divide':
+          if (num2 === 0) result = 'Cannot divide by zero';
+          else result = `${num1} ÷ ${num2} = ${(num1 / num2).toFixed(4)}`;
+          break;
+        case 'power':
+          result = `${num1}^${num2} = ${Math.pow(num1, num2).toFixed(4)}`;
+          break;
+        case 'sqrt':
+          if (num1 < 0) result = 'Cannot square root negative numbers';
+          else result = `√${num1} = ${Math.sqrt(num1).toFixed(4)}`;
+          break;
+        case 'log':
+          if (num1 <= 0) result = 'Logarithm undefined for this input';
+          else result = `log(${num1}) = ${Math.log10(num1).toFixed(4)}`;
+          break;
+        case 'sin':
+          result = `sin(${num1}°) = ${Math.sin(num1 * Math.PI / 180).toFixed(4)}`;
+          break;
+        case 'cos':
+          result = `cos(${num1}°) = ${Math.cos(num1 * Math.PI / 180).toFixed(4)}`;
+          break;
+        case 'tan':
+          result = `tan(${num1}°) = ${Math.tan(num1 * Math.PI / 180).toFixed(4)}`;
+          break;
+        default:
+          result = 'Invalid operation';
+      }
+      
+      output.textContent = result;
+    }
+
+    // Mood Tracker
+    let currentMood = null;
+    
+    function selectMood(element, mood) {
+      document.querySelectorAll('.mood-option').forEach(opt => {
+        opt.classList.remove('selected');
+      });
+      element.classList.add('selected');
+      currentMood = mood;
+    }
+    
+    function saveMood() {
+      if (!currentMood) {
+        alert('Please select a mood first');
+        return;
+      }
+      
+      const note = document.getElementById('moodNote').value;
+      const history = document.getElementById('moodHistory');
+      const now = new Date();
+      const timeString = now.toLocaleTimeString([], {hour: '2-digit', minute:'2-digit'});
+      
+      const entry = document.createElement('div');
+      entry.innerHTML = `<strong>${timeString}:</strong> ${currentMood} ${note ? '- ' + note : ''}`;
+      history.prepend(entry);
+      
+      // Clear inputs
+      document.querySelector('.mood-option.selected').classList.remove('selected');
+      document.getElementById('moodNote').value = '';
+      currentMood = null;
+    }
+
+    // RGB Color Lab
+    function updateColorLab() {
+      const r = document.getElementById('rSlider').value;
+      const g = document.getElementById('gSlider').value;
+      const b = document.getElementById('bSlider').value;
+      
+      document.getElementById('rValue').textContent = r;
+      document.getElementById('gValue').textContent = g;
+      document.getElementById('bValue').textContent = b;
+      
+      const colorBox = document.getElementById('colorPreview');
+      const color = `rgb(${r}, ${g}, ${b})`;
+      colorBox.style.backgroundColor = color;
+      
+      // Determine text color based on brightness
+      const brightness = (r * 299 + g * 587 + b * 114) / 1000;
+      colorBox.style.color = brightness > 128 ? '#000' : '#fff';
+      
+      // Convert to HEX
+      const toHex = (x) => parseInt(x).toString(16).padStart(2, '0');
+      const hex = `#${toHex(r)}${toHex(g)}${toHex(b)}`;
+      
+      colorBox.textContent = `RGB(${r}, ${g}, ${b}) | ${hex.toUpperCase()}`;
+    }
+    
+    function randomColor() {
+      const r = Math.floor(Math.random() * 256);
+      const g = Math.floor(Math.random() * 256);
+      const b = Math.floor(Math.random() * 256);
+      
+      document.getElementById('rSlider').value = r;
+      document.getElementById('gSlider').value = g;
+      document.getElementById('bSlider').value = b;
+      
+      updateColorLab();
+    }
+    
+    function copyColor() {
+      const r = document.getElementById('rSlider').value;
+      const g = document.getElementById('gSlider').value;
+      const b = document.getElementById('bSlider').value;
+      const toHex = (x) => parseInt(x).toString(16).padStart(2, '0');
+      const hex = `#${toHex(r)}${toHex(g)}${toHex(b)}`;
+      
+      navigator.clipboard.writeText(hex).then(() => {
+        const colorBox = document.getElementById('colorPreview');
+        colorBox.textContent = `Copied: ${hex.toUpperCase()}`;
+        setTimeout(updateColorLab, 1000);
+      });
+    }
+
+    // Emoji Progress
+    function updateEmojiProgress() {
+      const value = document.getElementById('emojiProgress').value;
+      const emoji = document.getElementById('progressEmoji');
+      const bar = document.getElementById('progressBar');
+      const output = document.getElementById('progressOutput');
+      
+      bar.style.width = `${value}%`;
+      
+      let face;
+      if (value < 20) face = '😢';
+      else if (value < 40) face = '😕';
+      else if (value < 60) face = '😐';
+      else if (value < 80) face = '😊';
+      else face = '😄';
+      
+      emoji.textContent = face;
+      
+      let message;
+      if (value === 0) message = "Let's get started!";
+      else if (value < 25) message = "You're just beginning!";
+      else if (value < 50) message = "Keep going!";
+      else if (value < 75) message = "You're more than halfway there!";
+      else if (value < 100) message = "Almost there!";
+      else message = "Completed! Great job! 🎉";
+      
+      output.textContent = `Progress: ${value}% - ${message}`;
+    }
+
+    // Task Master
+    function addNewTask() {
+      const input = document.getElementById('newTask');
+      const taskText = input.value.trim();
+      
+      if (!taskText) {
+        alert('Please enter a task');
+        return;
+      }
+      
+      const taskList = document.getElementById('taskList');
+      const li = document.createElement('li');
+      li.className = 'task-item';
+      li.innerHTML = `
+        <span onclick="toggleTaskComplete(this)">${taskText}</span>
+        <button class="task-delete" onclick="deleteTask(this)">🗑️</button>
+      `;
+      taskList.appendChild(li);
+      
+      input.value = '';
+    }
+    
+    function toggleTaskComplete(element) {
+      element.classList.toggle('task-completed');
+    }
+    
+    function deleteTask(button) {
+      button.parentElement.remove();
+    }
+    
+    function clearCompletedTasks() {
+      document.querySelectorAll('.task-completed').forEach(task => {
+        task.parentElement.remove();
+      });
+    }
+
+    // Quote Generator
+    const quotes = [
+      { text: "The only way to do great work is to love what you do.", author: "Steve Jobs" },
+      { text: "Innovation distinguishes between a leader and a follower.", author: "Steve Jobs" },
+      { text: "Your time is limited, so don't waste it living someone else's life.", author: "Steve Jobs" },
+      { text: "Stay hungry, stay foolish.", author: "Steve Jobs" },
+      { text: "The future belongs to those who believe in the beauty of their dreams.", author: "Eleanor Roosevelt" },
+      { text: "Success is not final, failure is not fatal: It is the courage to continue that counts.", author: "Winston Churchill" },
+      { text: "The only limit to our realization of tomorrow is our doubts of today.", author: "Franklin D. Roosevelt" },
+      { text: "It does not matter how slowly you go as long as you do not stop.", author: "Confucius" },
+      { text: "Everything you've ever wanted is on the other side of fear.", author: "George Addair" },
+      { text: "The journey of a thousand miles begins with one step.", author: "Lao Tzu" }
+    ];
+    
+    function newQuote() {
+      const randomIndex = Math.floor(Math.random() * quotes.length);
+      document.getElementById('currentQuote').textContent = `"${quotes[randomIndex].text}"`;
+      document.getElementById('quoteAuthor').textContent = `- ${quotes[randomIndex].author}`;
+    }
+    
+    function saveQuote() {
+      const currentQuote = document.getElementById('currentQuote').textContent;
+      const currentAuthor = document.getElementById('quoteAuthor').textContent;
+      const savedQuotes = document.getElementById('savedQuotes');
+      
+      const quoteDiv = document.createElement('div');
+      quoteDiv.innerHTML = `${currentQuote} ${currentAuthor}`;
+      savedQuotes.prepend(quoteDiv);
+    }
+
+    // Unit Converter
+    function convertUnits() {
+      const value = parseFloat(document.getElementById('convertValue').value);
+      const fromUnit = document.getElementById('convertFrom').value;
+      const toUnit = document.getElementById('convertTo').value;
+      const output = document.getElementById('conversionResult');
+      
+      if (isNaN(value)) {
+        output.textContent = 'Please enter a valid number';
+        return;
+      }
+      
+      // Temperature conversion
+      if ((fromUnit === 'celsius' && toUnit === 'fahrenheit') || 
+          (fromUnit === 'fahrenheit' && toUnit === 'celsius')) {
+        let result;
+        if (fromUnit === 'celsius') {
+          result = (value * 9/5) + 32;
+          output.textContent = `${value}°C = ${result.toFixed(2)}°F`;
+        } else {
+          result = (value - 32) * 5/9;
+          output.textContent = `${value}°F = ${result.toFixed(2)}°C`;
+        }
+        return;
+      }
+      
+      // Weight conversion
+      if ((fromUnit === 'kilogram' && toUnit === 'pound') || 
+          (fromUnit === 'pound' && toUnit === 'kilogram')) {
+        let result;
+        if (fromUnit === 'kilogram') {
+          result = value * 2.20462;
+          output.textContent = `${value} kg = ${result.toFixed(2)} lbs`;
+        } else {
+          result = value / 2.20462;
+          output.textContent = `${value} lbs = ${result.toFixed(2)} kg`;
+        }
+        return;
+      }
+      
+      // Length conversion
+      const lengthUnits = {
+        meter: 1,
+        kilometer: 1000,
+        centimeter: 0.01,
+        mile: 1609.34,
+        foot: 0.3048,
+        inch: 0.0254
+      };
+      
+      if (lengthUnits[fromUnit] && lengthUnits[toUnit]) {
+        const meters = value * lengthUnits[fromUnit];
+        const converted = meters / lengthUnits[toUnit];
+        output.textContent = `${value} ${fromUnit} = ${converted.toFixed(4)} ${toUnit}`;
+      } else {
+        output.textContent = 'Cannot convert between these units';
+      }
+    }
+
+    // Password Vault
+    function togglePasswordVisibility() {
+      const passwordField = document.getElementById('vaultPassword');
+      const toggleBtn = document.querySelector('#password .button-group button:first-child');
+      
+      if (passwordField.type === 'password') {
+        passwordField.type = 'text';
+        toggleBtn.textContent = '🙈 Hide';
+      } else {
+        passwordField.type = 'password';
+        toggleBtn.textContent = '👁️ Show';
+      }
+    }
+    
+    function checkPasswordStrength() {
+      const password = document.getElementById('vaultPassword').value;
+      const output = document.getElementById('passwordStrength');
+      
+      if (!password) {
+        output.textContent = 'Please enter a password';
+        return;
+      }
+      
+      // Calculate strength
+      let strength = 0;
+      let messages = [];
+      
+      // Length check
+      if (password.length < 6) {
+        messages.push('too short');
+      } else if (password.length < 10) {
+        strength += 1;
+        messages.push('short');
+      } else {
+        strength += 2;
+      }
+      
+      // Complexity checks
+      if (/[A-Z]/.test(password)) strength += 1;
+      else messages.push('no uppercase');
+      
+      if (/[a-z]/.test(password)) strength += 1;
+      else messages.push('no lowercase');
+      
+      if (/[0-9]/.test(password)) strength += 1;
+      else messages.push('no numbers');
+      
+      if (/[^A-Za-z0-9]/.test(password)) strength += 2;
+      else messages.push('no special chars');
+      
+      // Determine strength level
+      let strengthText;
+      if (strength < 3) {
+        strengthText = 'Very Weak';
+      } else if (strength < 5) {
+        strengthText = 'Weak';
+      } else if (strength < 7) {
+        strengthText = 'Moderate';
+      } else {
+        strengthText = 'Strong';
+      }
+      
+      output.textContent = `Strength: ${strengthText}${messages.length ? ' (missing: ' + messages.join(', ') + ')' : ''}`;
+    }
+
+    // Daily Journal
+    function saveJournalEntry() {
+      const text = document.getElementById("journalEntry").value.trim();
+      if (!text) {
+        alert("Please write something before saving.");
+        return;
+      }
+
+      const entry = {
+        content: text,
+        date: new Date().toLocaleString()
+      };
+
+      let journal = JSON.parse(localStorage.getItem("journal")) || [];
+      journal.unshift(entry); // Add to start
+      localStorage.setItem("journal", JSON.stringify(journal));
+      document.getElementById("journalEntry").value = "";
+      loadJournalEntries();
+    }
+
+    function loadJournalEntries() {
+      const journal = JSON.parse(localStorage.getItem("journal")) || [];
+      const container = document.getElementById("journalEntries");
+      container.innerHTML = "";
+
+      if (journal.length === 0) {
+        container.innerHTML = "<p>No entries yet.</p>";
+        return;
+      }
+
+      journal.forEach(entry => {
+        container.innerHTML += `
+          <div class="entry">
+            <time>${entry.date}</time>
+            <p>${entry.content}</p>
+          </div>
+        `;
+      });
+    }
+
+    // Notes App
+    function saveNote() {
+      const note = document.getElementById("noteInput").value;
+      localStorage.setItem("savedNote", note);
+      displayNote();
+    }
+
+    function clearNote() {
+      localStorage.removeItem("savedNote");
+      document.getElementById("noteInput").value = "";
+      displayNote();
+    }
+
+    function displayNote() {
+      const saved = localStorage.getItem("savedNote");
+      const display = document.getElementById("displayNote");
+      if (saved && saved.trim() !== "") {
+        display.innerHTML = `<strong>Your Saved Note:</strong><br>${saved}`;
+      } else {
+        display.innerHTML = "No note saved yet.";
+      }
+    }
+
+    // DOM Playground
+    function changeColor() {
+      let colors = ["#FFB7D5", "#A7E8FF", "#B5FFC9", "#FFD6A7", "#E8A7FF"];
+      let randomColor = colors[Math.floor(Math.random() * colors.length)];
+      document.getElementById("colorBox").style.backgroundColor = randomColor;
+    }
+
+    function addDomItem() {
+      let input = document.getElementById("itemInput").value;
+      if (input === "") {
+        alert("Please enter a task!");
+        return;
+      }
+      
+      let li = document.createElement("li");
+      li.className = 'task-item';
+      li.innerHTML = `${input} <button class="delete-btn" onclick="removeDomItem(this)">❌</button>`;
+      document.getElementById("domTaskList").appendChild(li);
+      
+      document.getElementById("itemInput").value = "";
+    }
+
+    function removeDomItem(element) {
+      element.parentElement.remove();
+    }
+
+    // Counter App
+    let count = 0;
+
+    function increaseCounter() {
+      count++;
+      document.getElementById("counterDisplay").innerHTML = count;
+    }
+
+    function decreaseCounter() {
+      count--;
+      document.getElementById("counterDisplay").innerHTML = count;
+    }
+
+    function resetCounter() {
+      count = 0;
+      document.getElementById("counterDisplay").innerHTML = count;
+    }
+
+    // Initialize components
+    updateColorLab();
+    updateEmojiProgress();
+    newQuote();
+    loadJournalEntries();
+    displayNote();
+  </script>
+</body>
+</html>
